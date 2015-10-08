@@ -13,7 +13,7 @@ module.exports = (robot) ->
   		    throw err
 		  res.reply "Stopped '#{service}'" if !err?
 	  
-	  fleetctl.stop service, "--no-block=false", stop_service
+	  fleetctl.stop service, "-no-block=false", stop_service
 
 	  start_service = (err) ->
   		  if err
@@ -21,7 +21,7 @@ module.exports = (robot) ->
   		    throw err 
 		  res.reply "Started '#{service}'" if !err?
 	  
-	  fleetctl.start service, "--no-block=false", start_service
+	  fleetctl.start service, "-no-block=false", start_service
 		  
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"

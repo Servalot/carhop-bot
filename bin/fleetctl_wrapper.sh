@@ -4,5 +4,5 @@ which $FLEETCTL
 if test $? -eq 1; then
 	FLEETCTL="./bin/$FLEETCTL"
 fi
-$FLEETCTL --tunnel=fleet.servalot.net:443 --strict-host-key-checking=false $@
+$FLEETCTL --tunnel=$HEROKU_FLEETCTL_TUNNEL --strict-host-key-checking=false $@
 

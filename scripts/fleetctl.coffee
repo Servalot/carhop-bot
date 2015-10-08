@@ -2,9 +2,9 @@
 #   carhop default scripts
 #
 module.exports = (robot) ->
-  robot.respond /deploy (.*)/, (res) ->
-	  Fleetctl = require("fleetctl")
-	  fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
+  Fleetctl = require("fleetctl")
+  fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
+  robot.respond /deploy (.*)/i, (res) ->
 	  service = res.match[1]
 	  
 	  stop_service = (err) ->
@@ -22,7 +22,34 @@ module.exports = (robot) ->
 		  res.reply "Started '#{service}'" if !err?
 	  
 	  fleetctl.start service, "-no-block=false", start_service
-		  
+
+  robot.respond /stop (.*)/i, (res) ->
+	  service = res.match[1]
+	  
+	  stop_service = (err) ->
+  		  if err
+  		    res.reply "Error stopping '#{service}' service. \n```#{err}```"
+  		    throw err
+		  res.reply "Stopped '#{service}'" if !err?
+	  
+	  fleetctl.stop service, "-no-block=false", stop_service
+
+  robot.hear /whats (.*)/i, (res) ->
+	  state = res.match[1]
+	  unit_list = (err, units) ->
+		  if (err)
+			  throw err
+		  res.send unit.unit for unit in units when unit.sub == state 
+	  fleetctl.list_units unit_list
+	  
+  robot.hear /status report/i, (res) ->
+	  unit_list = (err, units) ->
+		  if (err)
+			  throw err
+		  out = for unit in units
+		    "#{unit.unit} - #{unit.sub}\n"
+		  res.send "```#{out.join("")}```"
+	  fleetctl.list_units unit_list
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #

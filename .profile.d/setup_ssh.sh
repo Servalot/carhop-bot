@@ -8,3 +8,4 @@ mkdir -p ${HOME}/.ssh
 chmod 700 ${HOME}/.ssh
 cp bin/core-os.pem ${HOME}/.ssh/id_rsa
 eval "$(ssh-agent)"
+ssh-add

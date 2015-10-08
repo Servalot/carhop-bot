@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 FLEETCTL="fleetctl"
 which $FLEETCTL
 if [[ $? -eq 1 ]]; then

@@ -5,6 +5,7 @@
   "author": "pete@servalot.net",
   "description": "Your friendly server anytime you need her.",
   "dependencies": {
+    "fleetctl": "^1.0.0",
     "hubot": "^2.16.0",
     "hubot-diagnostics": "0.0.1",
     "hubot-google-images": "^0.2.2",

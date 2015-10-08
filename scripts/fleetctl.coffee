@@ -39,7 +39,9 @@ module.exports = (robot) ->
 	  unit_list = (err, units) ->
 		  if (err)
 			  throw err
-		  res.send unit.unit for unit in units when unit.sub == state 
+		  out = for unit in units when unit.sub == state 
+			  unit.unit
+		  res.send "```#{out.join("\n")}```"
 	  fleetctl.list_units unit_list
 	  
   robot.hear /status report/i, (res) ->
@@ -47,8 +49,8 @@ module.exports = (robot) ->
 		  if (err)
 			  throw err
 		  out = for unit in units
-		    "#{unit.unit} - #{unit.sub}\n"
-		  res.send "```#{out.join("")}```"
+		    "#{unit.unit} - #{unit.sub}"
+		  res.send "```#{out.join("\n")}```"
 	  fleetctl.list_units unit_list
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"

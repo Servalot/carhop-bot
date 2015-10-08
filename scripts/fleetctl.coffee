@@ -2,10 +2,10 @@
 #   carhop default scripts
 #
 module.exports = (robot) ->
-  robot.respond /deploy/, (res) ->
+  robot.respond /deploy (.*)/, (res) ->
 	  Fleetctl = require("fleetctl")
 	  fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
-	  service = "merchant@1"
+	  service = res.match[1]
 	  
 	  stop_service = (err) ->
   		  if err
@@ -13,7 +13,7 @@ module.exports = (robot) ->
   		    throw err 
   		res.reply "Stopped '#{service}'"
 	  
-	  fleetctl.stop service, {}, stop_service
+	  fleetctl.stop service, null, stop_service
 
 	  start_service = (err) ->
   		  if err
@@ -21,7 +21,7 @@ module.exports = (robot) ->
   		    throw err 
   		res.reply "Started '#{service}'"
 	  
-	  fleetctl.stop service, {}, start_service
+	  fleetctl.start service, null, start_service
 		  
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"

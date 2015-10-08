@@ -4,7 +4,7 @@
 module.exports = (robot) ->
   robot.respond /deploy/, (res) ->
 	  Fleetctl = require("fleetctl")
-	  fleetctl = new Fleetctl(binary: "bin/fleetctl")
+	  fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
 	  list = (err, machines) -> 
 	    throw err if err?
 	    res.reply "List of machines #{machines}"

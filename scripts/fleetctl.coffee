@@ -1,6 +1,17 @@
 # Description:
-#   carhop default scripts
+#   Manages all of the Servalot service connections to our clusters.
 #
+# Commands:
+#   carhop deploy <service> - Deploys the latest build of the service to the cluster.
+#   carhop stop <service> - Stop the service in the cluster.
+#   what is <state> - Ask carhop what is <running|dead|inactive>.
+#   status report - Gives a cluster status report.
+#
+# URLS:
+#   /carhop/help
+#
+# Notes:
+#   These commands are grabbed from comment blocks at the top of each file.
 module.exports = (robot) ->
   Fleetctl = require("fleetctl")
   fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")

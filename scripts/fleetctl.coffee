@@ -34,7 +34,7 @@ module.exports = (robot) ->
 	  
 	  fleetctl.stop service, "-no-block=false", stop_service
 
-  robot.hear /whats (.*)/i, (res) ->
+  robot.hear /what is (.*)/i, (res) ->
 	  state = res.match[1]
 	  unit_list = (err, units) ->
 		  if (err)

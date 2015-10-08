@@ -5,11 +5,24 @@ module.exports = (robot) ->
   robot.respond /deploy/, (res) ->
 	  Fleetctl = require("fleetctl")
 	  fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
-	  list = (err, machines) -> 
-	    throw err if err?
-	    res.reply "List of machines #{machines}"
-	  fleetctl.list_machines(list)
+	  service = "merchant@1"
+	  
+	  stop_service = (err) ->
+  		  if err
+  		    res.reply "Error stopping '#{service}' service. :( \n```#{err}```"
+  		    throw err 
+  		res.reply "Stopped '#{service}'"
+	  
+	  fleetctl.stop service, stop_service
 
+	  start_service = (err) ->
+  		  if err
+  		    res.reply "Error starting '#{service}' service. :( \n```#{err}```"
+  		    throw err 
+  		res.reply "Started '#{service}'"
+	  
+	  fleetctl.stop service, start_service
+		  
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #

@@ -1,27 +1,14 @@
 # Description:
-#   Example scripts for you to examine and try out.
+#   carhop default scripts
 #
-# Notes:
-#   They are commented out by default, because most of them are pretty silly and
-#   wouldn't be useful and amusing enough for day to day huboting.
-#   Uncomment the ones you want to try and experiment with.
-#
-#   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
-
 module.exports = (robot) ->
-
   robot.respond /deploy/, (res) ->
-	res.reply "You want to deploy?"
-    Fleetctl = require("fleetctl")
-    fleetctl = new Fleetctl(binary: "bin/fleetctl")
-    
-	list = (err, machines) -> 
-      res.reply err if err?
-	  throw err if err?
-      res.reply "List of machines #{machines}"
-
-    fleetctl.list_machines(list)
-
+	  Fleetctl = require("fleetctl")
+	  fleetctl = new Fleetctl(binary: "bin/fleetctl")
+	  list = (err, machines) -> 
+	    throw err if err?
+	    res.reply "List of machines #{machines}"
+	  fleetctl.list_machines(list)
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"

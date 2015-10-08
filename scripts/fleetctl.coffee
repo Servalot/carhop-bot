@@ -9,17 +9,19 @@ module.exports = (robot) ->
 	  
 	  stop_service = (err) ->
   		  if err
-  		    res.reply "Error stopping '#{service}' service. :( \n```#{err}```"
-  		    throw err 
-  		res.reply "Stopped '#{service}'"
+  		    res.reply "Error stopping '#{service}' service. \n```#{err}```"
+  		    throw err
+		  else
+			  res.reply "Stopped '#{service}'"
 	  
 	  fleetctl.stop service, null, stop_service
 
 	  start_service = (err) ->
   		  if err
-  		    res.reply "Error starting '#{service}' service. :( \n```#{err}```"
+  		    res.reply "Error starting '#{service}' service. \n```#{err}```"
   		    throw err 
-  		res.reply "Started '#{service}'"
+		  else
+			  res.reply "Started '#{service}'"
 	  
 	  fleetctl.start service, null, start_service
 		  

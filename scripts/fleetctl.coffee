@@ -16,20 +16,25 @@ module.exports = (robot) ->
   Fleetctl = require("fleetctl")
   fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
   robot.respond /deploy (.*)/i, (res) ->
-	  service = res.match[1]	  
+	  service = res.match[1]
+	  res.reply "Deploying '#{service}', please wait.."
 
 	  start_service = (err) ->
-  		  if err
-  		    res.reply "Error starting '#{service}' service. \n```#{err}```"
-  		    throw err 
-		  res.reply "Started '#{service}'" if !err?
+		  if err
+			  res.reply "Error starting '#{service}' service. \n```#{err}```"
+			  throw err 
+		  else
+			  res.reply "Started '#{service}'"
+			  res.reply "Deploy of '#{service}' complete."
 	  
 	  stop_service = (err) ->
- 		  if err
- 		    res.reply "Error stopping '#{service}' service. \n```#{err}```"
- 		    throw err
-		  res.reply "Stopped '#{service}'" if !err?
-		  fleetctl.start service, "-no-block=false", start_service
+		  if err
+			  res.reply "Error stopping '#{service}' service. \n```#{err}```"
+			  throw err
+		  else
+			  res.reply "Stopped '#{service}', waiting 2 sec to restart service.."
+			  sleep(2000)
+			  fleetctl.start service, "-no-block=false", start_service
 	 
 	  fleetctl.stop service, "-no-block=false", stop_service
 	  
@@ -38,10 +43,11 @@ module.exports = (robot) ->
 	  service = res.match[1]
 	  
 	  stop_service = (err) ->
-  		  if err
-  		    res.reply "Error stopping '#{service}' service. \n```#{err}```"
-  		    throw err
-		  res.reply "Stopped '#{service}'" if !err?
+		  if err
+			  res.reply "Error stopping '#{service}' service. \n```#{err}```"
+			  throw err
+		  else
+			  res.reply "Stopped '#{service}'" if !err?
 	  
 	  fleetctl.stop service, "-no-block=false", stop_service
 
@@ -63,6 +69,11 @@ module.exports = (robot) ->
 		    "#{unit.unit} - #{unit.sub}"
 		  res.send "```#{out.join("\n")}```"
 	  fleetctl.list_units unit_list
+	  
+	  
+  sleep = (ms) ->
+    start = new Date().getTime()
+    continue while new Date().getTime() - start < ms
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #

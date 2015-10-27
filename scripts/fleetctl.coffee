@@ -16,21 +16,20 @@ module.exports = (robot) ->
   Fleetctl = require("fleetctl")
   fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
   robot.respond /deploy (.*)/i, (res) ->
-	  service = res.match[1]
-	  
-	  stop_service = (err) ->
-  		  if err
-  		    res.reply "Error stopping '#{service}' service. \n```#{err}```"
-  		    throw err
-		  res.reply "Stopped '#{service}'" if !err?
-		  fleetctl.start service, "-no-block=false", start_service
-	  
+	  service = res.match[1]	  
 
 	  start_service = (err) ->
   		  if err
   		    res.reply "Error starting '#{service}' service. \n```#{err}```"
   		    throw err 
 		  res.reply "Started '#{service}'" if !err?
+	  
+	  stop_service = (err) ->
+ 		  if err
+ 		    res.reply "Error stopping '#{service}' service. \n```#{err}```"
+ 		    throw err
+		  res.reply "Stopped '#{service}'" if !err?
+		  fleetctl.start service, "-no-block=false", start_service
 	 
 	  fleetctl.stop service, "-no-block=false", stop_service
 	  

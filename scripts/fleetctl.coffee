@@ -23,7 +23,7 @@ module.exports = (robot) ->
   		    res.reply "Error stopping '#{service}' service. \n```#{err}```"
   		    throw err
 		  res.reply "Stopped '#{service}'" if !err?
-	          fleetctl.start service, "-no-block=false", start_service
+		  fleetctl.start service, "-no-block=false", start_service
 	  
 
 	  start_service = (err) ->

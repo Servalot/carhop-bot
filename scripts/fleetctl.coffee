@@ -17,15 +17,15 @@ module.exports = (robot) ->
   fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
   robot.respond /deploy (.*)/i, (res) ->
     service = res.match[1]
-    deploy(service, res)
+    deploy(service, res.reply)
 
   robot.respond /start (.*)/i, (res) ->
     service = res.match[1]
-    start(service, res)
+    start(service, res.reply)
 
   robot.respond /stop (.*)/i, (res) ->
     service = res.match[1]
-    stop(service, res)
+    stop(service, res.reply)
 
   robot.hear /what is (.*)/i, (res) ->
     state = res.match[1]
@@ -47,57 +47,63 @@ module.exports = (robot) ->
     fleetctl.list_units unit_list
 
   # the expected value of :room is going to vary by adapter, it might be a numeric id, name, token, or some other value
-  robot.router.post '/hubot/fleetctl/:room', (req, res) ->
+  robot.router.post "/#{robot.name}/fleetctl/:room", (req, res) ->
     room   = req.params.room
     data   = if req.body.payload? then JSON.parse req.body.payload else req.body
     service = data.service
     cmd = data.cmd
+    msg = (value) ->
+      robot.messageRoom room, value
 
-    robot.messageRoom room, ">I got a command (#{cmd}) for: #{service}"
+    switch cmd
+      when "deploy" then deploy(service, msg)
+      when "stop" then stop(service, msg)
+      when "start" then start(service, msg)
+      else msg ">I got a invalid command '#{cmd}' for '#{service}', not doing anything."
 
     res.send 'OK'
 
 ##### HELPER FUNCTIONS #####
 
 # Stop a service
-  stop = (service, res) ->
+  stop = (service, msg) ->
     stop_service = (err) ->
       if err
-        res.reply ">>>Error stopping '#{service}' service. \n```#{err}```"
+        msg ">>>Error stopping '#{service}' service. \n```#{err}```"
         throw err
       else
-        res.reply ">>>Stopped '#{service}'" if !err?
+        msg ">>>Stopped '#{service}'" if !err?
 
     fleetctl.stop service, "-no-block=false", stop_service
 
-  start = (service, res) ->
+  start = (service, msg) ->
     start_service = (err) ->
       if err
-        res.reply ">>>Error starting '#{service}' service. \n```#{err}```"
+        msg ">>>Error starting '#{service}' service. \n```#{err}```"
         throw err
       else
-        res.reply ">>>Started '#{service}'" if !err?
+        msg ">>>Started '#{service}'" if !err?
 
     fleetctl.start service, "-no-block=false", start_service
 
 # Deploy a service
-  deploy = (service, res) ->
-    res.reply ">>>Deploying '#{service}', please wait.."
+  deploy = (service, msg) ->
+    msg ">>>Deploying '#{service}', please wait.."
 
     start_service = (err) ->
       if err
-        res.reply ">>>Error starting '#{service}' service. \n```#{err}```"
+        msg ">>>Error starting '#{service}' service. \n```#{err}```"
         throw err
       else
-        res.reply ">>>Started '#{service}'"
-        res.reply ">>>Deploy of '#{service}' complete."
+        msg ">>>Started '#{service}'"
+        msg ">>>Deploy of '#{service}' complete."
 
     stop_service = (err) ->
       if err
-        res.reply ">>>Error stopping '#{service}' service. \n```#{err}```"
+        msg ">>>Error stopping '#{service}' service. \n```#{err}```"
         throw err
       else
-        res.reply ">>>Stopped '#{service}', waiting 2 sec to restart service.."
+        msg ">>>Stopped '#{service}', waiting 2 sec to restart service.."
         sleep(2000)
         fleetctl.start service, "-no-block=false", start_service
 

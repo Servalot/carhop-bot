@@ -15,17 +15,27 @@
 module.exports = (robot) ->
   Fleetctl = require("fleetctl")
   fleetctl = new Fleetctl(binary: "bin/fleetctl_wrapper.sh")
+
   robot.respond /deploy (.*)/i, (res) ->
     service = res.match[1]
-    deploy(service, res.reply)
+    msg = (value) ->
+      res.reply value
+
+    deploy(service, msg)
 
   robot.respond /start (.*)/i, (res) ->
     service = res.match[1]
-    start(service, res.reply)
+    msg = (value) ->
+      res.reply value
+
+    start(service, msg)
 
   robot.respond /stop (.*)/i, (res) ->
     service = res.match[1]
-    stop(service, res.reply)
+    msg = (value) ->
+      res.reply value
+
+    stop(service, msg)
 
   robot.hear /what is (.*)/i, (res) ->
     state = res.match[1]

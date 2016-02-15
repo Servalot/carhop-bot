@@ -19,21 +19,21 @@ module.exports = (robot) ->
   robot.respond /deploy (.*)/i, (res) ->
     service = res.match[1]
     msg = (value) ->
-      res.reply value
+      res.send value
 
     deploy(service, msg)
 
   robot.respond /start (.*)/i, (res) ->
     service = res.match[1]
     msg = (value) ->
-      res.reply value
+      res.send value
 
     start(service, msg)
 
   robot.respond /stop (.*)/i, (res) ->
     service = res.match[1]
     msg = (value) ->
-      res.reply value
+      res.send value
 
     stop(service, msg)
 

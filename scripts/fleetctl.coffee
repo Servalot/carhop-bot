@@ -73,6 +73,9 @@ module.exports = (robot) ->
 
     res.send 'OK'
 
+  robot.router.get "/", (req, res) ->
+    res.send 'BEEP'
+
 ##### HELPER FUNCTIONS #####
 
 # Stop a service
